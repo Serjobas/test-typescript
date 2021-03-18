@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react'
+import { ThemeProvider } from 'styled-components'
+import { theme } from './theme/dark'
+import { GlobalStyle } from './layouts/GlobalStyle'
+import { DataContextProvider } from './components/DataContext'
+import { PictureModalContextProvider } from './components/PictureModalContext'
+import { Routes } from './routes'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <GlobalStyle />
+      <ThemeProvider theme={theme}>
+        <DataContextProvider>
+          <PictureModalContextProvider>
+            <Routes />
+          </PictureModalContextProvider>
+          {/*<CoreLayout>*/}
+          {/*  <DefaultContent header="Trending images">*/}
+          {/*    <PictureGrid category={undefined} />*/}
+          {/*  </DefaultContent>*/}
+          {/*</CoreLayout>*/}
+        </DataContextProvider>
+      </ThemeProvider>
+    </>
+  )
 }
 
-export default App;
+export default App
