@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCallback, useContext, useEffect, useRef } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { ASSETS_ENDPOINT } from '../../api/config'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import { DataContext } from '../DataContext/context'
@@ -21,9 +21,14 @@ const LoadingBlock = styled.div`
 export const PictureGrid: React.FC<IProps> = React.memo(({ categoryId }) => {
   const { pictures, currentPage, loadPictures, hasMore, changeToNextPage } = useContext(DataContext)
   const { openPicture } = useContext(PictureModalContext)
+  const [imagesAmountLoaded, setImagesAmountLoaded] = useState(0)
 
   const prevCurrentPage = useRef<number | null>(null)
   const prevCategoryId = useRef<number | undefined | null>(null)
+
+  const handleIncreaseImageAmount = () => {
+    setImagesAmountLoaded(s => s + 1)
+  }
 
   // Missing dep: loadPictures, but it crashes the browser. Why?
   useEffect(() => {
@@ -94,11 +99,13 @@ export const PictureGrid: React.FC<IProps> = React.memo(({ categoryId }) => {
               style={{ width: '100%', display: 'block', cursor: 'pointer' }}
               alt=""
               onClick={() => openPicture(picture)}
+              onLoad={handleIncreaseImageAmount}
+              onError={handleIncreaseImageAmount}
             />
           ))}
         </Masonry>
       </ResponsiveMasonry>
-      {pictures.length > 0 && (
+      {pictures.length > 0 && imagesAmountLoaded === pictures.length && (
         <LoadingBlock ref={loaderRef}>
           <H3>{hasMore ? 'Loading more...' : 'That is all.'}</H3>
         </LoadingBlock>
