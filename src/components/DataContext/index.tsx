@@ -19,7 +19,7 @@ export const DataContextProvider: React.FC = React.memo(({ children }) => {
   const loadPictures = useCallback(
     async (categoryId: number | undefined, page: number = 1) => {
       if (page === 1) {
-        setPictures([])
+        setPictures(undefined)
       }
 
       const response = await fetchPictures(categoryId, page)
@@ -54,7 +54,7 @@ export const DataContextProvider: React.FC = React.memo(({ children }) => {
     (id: number | undefined) => {
       setCurrentCategoryId(id)
       setCurrentPage(1)
-      setPictures([])
+      setPictures(undefined)
     },
     [setCurrentCategoryId, setCurrentPage],
   )
