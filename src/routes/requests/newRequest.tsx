@@ -47,7 +47,7 @@ export const NewRequest: React.FC<RouteComponentProps> = React.memo(() => {
               const response = await createPictureRequest(values)
               actions.setSubmitting(false)
               console.log({ data: response.data })
-              navigate(`/requests/${response.data.id}`)
+              navigate(`/requests/${response.data.request.id}`)
             }}>
             <Form>
               <Field name="name">

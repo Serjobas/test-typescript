@@ -13,7 +13,7 @@ export const fetchAllRequests = () => {
 }
 
 export const createPictureRequest = (request: Omit<IPictureRequest, 'id'>) => {
-  return axios.post(`${API_ENDPOINT}/requests`, request)
+  return axios.post<{request: IPictureRequest}>(`${API_ENDPOINT}/requests`, request)
 }
 
 export const fetchRequest = (id: number) => {
