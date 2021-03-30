@@ -90,7 +90,7 @@ export const CoreLayout: React.FC<IProps> = ({ children, withCategoriesLeftMenu 
   }
 
   topMenuItems.push(
-    { to: '/requests', label: 'Requests', highlightColor: '#4845D8' },
+    { to: '/requests', matchPath: `/requests/*`, label: 'Requests', highlightColor: '#4845D8' },
     { to: '/likes', label: 'Likes API Tester', highlightColor: '#fff' },
   )
 
