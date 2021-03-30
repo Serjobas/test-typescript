@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { doSomethingImportantWithTheValue } from '../../utils/important'
 import { TextButton } from '../Button'
@@ -114,6 +114,7 @@ interface IStylishInputProps {
   label: string
   icon?: React.ReactNode
   scaleMultiplier?: number
+  setRef?: (ref: HTMLInputElement) => void
 }
 
 const StylishInput: React.FC<IStylishInputProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
@@ -122,6 +123,7 @@ const StylishInput: React.FC<IStylishInputProps & React.InputHTMLAttributes<HTML
   label,
   icon,
   scaleMultiplier: scaleMultiplierMaybe,
+  setRef,
   ...rest
 }) => {
   const hasError = Boolean(errorMessage)
@@ -130,8 +132,12 @@ const StylishInput: React.FC<IStylishInputProps & React.InputHTMLAttributes<HTML
   const focusInput = React.useCallback(() => {
     if (ref.current) {
       ref.current.focus()
+
+      if (setRef) {
+        setRef(ref.current)
+      }
     }
-  }, [ref])
+  }, [ref, setRef])
 
   const multiplier = scaleMultiplierMaybe || 1
 
@@ -208,11 +214,21 @@ export const CustomInput = ({
     },
     [onChange, type],
   )
+  const [ref, setRef] = useState<HTMLInputElement | undefined>(undefined)
+
+  const handleSetRef = useCallback(
+    (newRef: HTMLInputElement) => {
+      setRef(newRef)
+    },
+    [setRef],
+  )
 
   const handleClear = useCallback(() => {
     if (type === 'number') onChange(0)
     else onChange('')
-  }, [onChange, type])
+
+    ref?.focus()
+  }, [onChange, type, ref])
 
   return (
     <InputContainer scaleMultiplier={props.scaleMultiplier}>
@@ -222,6 +238,7 @@ export const CustomInput = ({
         hintMessage={message}
         errorMessage={error}
         onChange={handleChange}
+        setRef={handleSetRef}
         {...props}
       />
       <TextButton icon={<CloseIcon />} type="button" onClick={handleClear} />
