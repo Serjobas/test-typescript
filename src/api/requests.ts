@@ -8,12 +8,19 @@ export interface IPictureRequest {
   year: number
 }
 
+export interface IPictureError {
+  value: number
+  msg: string
+  param: string
+  location: string
+}
+
 export const fetchAllRequests = () => {
   return axios.get<{ requests: IPictureRequest[] }>(`${API_ENDPOINT}/requests`)
 }
 
 export const createPictureRequest = (request: Omit<IPictureRequest, 'id'>) => {
-  return axios.post<{request: IPictureRequest}>(`${API_ENDPOINT}/requests`, request)
+  return axios.post<{ request: IPictureRequest }>(`${API_ENDPOINT}/requests`, request)
 }
 
 export const fetchRequest = (id: number) => {

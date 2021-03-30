@@ -7,7 +7,7 @@ import { Field, FieldProps, Form, Formik } from 'formik'
 import { CustomInput } from '../../components/Input/Input'
 import styled from 'styled-components/macro'
 import { PrimaryButton } from '../../components/Button'
-import { createPictureRequest } from '../../api/requests'
+import { createPictureRequest, IPictureError } from '../../api/requests'
 
 interface IFormValues {
   name: string
@@ -42,12 +42,32 @@ export const NewRequest: React.FC<RouteComponentProps> = React.memo(() => {
         <FormContainer>
           <Formik
             initialValues={initialValues}
+            validateOnBlur={false}
+            validateOnChange={false}
+            validate={values => {
+              const { name } = values
+              if (name && name.length > 0) {
+                return {}
+              } else {
+                return { name: "Name shouldn't be empty" }
+              }
+            }}
             onSubmit={async (values, actions) => {
-              actions.setSubmitting(true)
-              const response = await createPictureRequest(values)
-              actions.setSubmitting(false)
-              console.log({ data: response.data })
-              navigate(`/requests/${response.data.request.id}`)
+              try {
+                actions.setSubmitting(true)
+                const response = await createPictureRequest(values)
+                actions.setSubmitting(false)
+                console.log({ data: response.data })
+                navigate(`/requests/${response.data.request.id}`)
+              } catch (e) {
+                if (e.response?.data?.errors) {
+                  let errorsObj: { [key: string]: string } = {}
+                  e.response?.data?.errors.forEach((error: IPictureError) => {
+                    errorsObj[error.param] = error.msg
+                  })
+                  actions.setErrors(errorsObj)
+                }
+              }
             }}>
             <Form>
               <Field name="name">
@@ -102,7 +122,13 @@ export const NewRequest: React.FC<RouteComponentProps> = React.memo(() => {
                 )}
               </Field>
 
-              <PrimaryButton type="submit">Submit</PrimaryButton>
+              <PrimaryButton
+                onClick={() => {
+                  return false
+                }}
+                type="submit">
+                Submit
+              </PrimaryButton>
             </Form>
           </Formik>
         </FormContainer>
