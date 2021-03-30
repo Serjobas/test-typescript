@@ -21,7 +21,7 @@ export const Category: React.FC<RouteComponentProps<{ categoryId: string }>> = R
     return (
       <CoreLayout withCategoriesLeftMenu={true}>
         <DefaultContent header={`Category ${category ? category.name : '...'}`}>
-          {category && <PictureGrid categoryId={category.id} />}
+          {category && <PictureGrid key={categoryId} categoryId={category.id} />}
         </DefaultContent>
       </CoreLayout>
     )

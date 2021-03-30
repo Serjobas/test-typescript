@@ -16,7 +16,7 @@ export const Trending: React.FC<RouteComponentProps> = React.memo(() => {
   return (
     <CoreLayout withCategoriesLeftMenu={false}>
       <DefaultContent header="Trending images">
-        <PictureGrid categoryId={undefined} />
+        <PictureGrid key="trending" categoryId={undefined} />
       </DefaultContent>
     </CoreLayout>
   )
