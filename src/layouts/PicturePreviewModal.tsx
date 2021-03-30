@@ -25,7 +25,7 @@ export const PicturePreviewModal: React.FC = React.memo(() => {
 
   const handleClose = useCallback(() => {
     openPicture(undefined)
-  }, [openedPicture])
+  }, [openPicture])
 
   if (!openedPicture) return null
 

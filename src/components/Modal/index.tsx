@@ -57,7 +57,7 @@ export const Modal: React.FC<IProps> = React.memo(({ children, onClose }) => {
         onClose()
       }
     },
-    [onClose, backdropRef.current],
+    [onClose],
   )
 
   return (

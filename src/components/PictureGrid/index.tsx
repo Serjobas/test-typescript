@@ -21,12 +21,19 @@ const LoadingBlock = styled.div`
 export const PictureGrid: React.FC<IProps> = React.memo(({ categoryId }) => {
   const { pictures, currentPage, loadPictures, hasMore, changeToNextPage } = useContext(DataContext)
   const { openPicture } = useContext(PictureModalContext)
-  const loader = useRef<HTMLDivElement>(null)
+
+  const prevCurrentPage = useRef<number | null>(null)
+  const prevCategoryId = useRef<number | undefined | null>(null)
 
   // Missing dep: loadPictures, but it crashes the browser. Why?
   useEffect(() => {
-    loadPictures(categoryId, currentPage)
-  }, [currentPage, categoryId])
+    if (currentPage !== prevCurrentPage.current || categoryId !== prevCategoryId.current) {
+      loadPictures(categoryId, currentPage)
+    }
+
+    prevCurrentPage.current = currentPage
+    prevCategoryId.current = categoryId
+  }, [currentPage, categoryId, loadPictures])
 
   const handleObserver = useCallback<IntersectionObserverCallback>(
     entities => {
@@ -37,26 +44,30 @@ export const PictureGrid: React.FC<IProps> = React.memo(({ categoryId }) => {
         }
       }
     },
-    [changeToNextPage, currentPage, hasMore],
+    [changeToNextPage, hasMore],
   )
 
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: '20px',
-      threshold: 1.0,
-    }
-    // initialize IntersectionObserver
-    // and attaching to Load More div
-    const observer = new IntersectionObserver(handleObserver, options)
-    if (loader.current) {
-      observer.observe(loader.current)
-    }
+  const loaderRef = useCallback(
+    node => {
+      if (node !== null && handleObserver) {
+        const options = {
+          root: null,
+          rootMargin: '20px',
+          threshold: 1.0,
+        }
+        // initialize IntersectionObserver
+        // and attaching to Load More div
+        const observer = new IntersectionObserver(handleObserver, options)
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [loader.current])
+        observer.observe(node)
+
+        return () => {
+          observer.disconnect()
+        }
+      }
+    },
+    [handleObserver],
+  )
 
   if (!pictures)
     return (
@@ -88,7 +99,7 @@ export const PictureGrid: React.FC<IProps> = React.memo(({ categoryId }) => {
         </Masonry>
       </ResponsiveMasonry>
       {pictures.length > 0 && (
-        <LoadingBlock ref={loader}>
+        <LoadingBlock ref={loaderRef}>
           <H3>{hasMore ? 'Loading more...' : 'That is all.'}</H3>
         </LoadingBlock>
       )}

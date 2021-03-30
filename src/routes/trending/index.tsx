@@ -6,7 +6,7 @@ import { PictureGrid } from '../../components/PictureGrid'
 import { useContext, useEffect } from 'react'
 import { DataContext } from '../../components/DataContext/context'
 
-export const Trending: React.FC<RouteComponentProps> = React.memo(({}) => {
+export const Trending: React.FC<RouteComponentProps> = React.memo(() => {
   const { setCurrentCategoryId } = useContext(DataContext)
 
   useEffect(() => {

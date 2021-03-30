@@ -34,7 +34,7 @@ export const DataContextProvider: React.FC = React.memo(({ children }) => {
       setPictures(picturesToSet)
       setHasMore(picturesToSet.length < response.data.totalCount)
     },
-    [pictures, setPictures, setCurrentCategoryId],
+    [pictures, setPictures, setHasMore],
   )
 
   const changeToNextPage = useCallback(() => {
@@ -72,13 +72,14 @@ export const DataContextProvider: React.FC = React.memo(({ children }) => {
     }
   }, [
     pictures,
-    setPictures,
     categories,
-    setCategories,
     hasMore,
     changeToNextPage,
     currentPage,
     setCurrentCategoryIdHandler,
+    currentCategoryId,
+    loadCategories,
+    loadPictures,
   ])
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>
 })

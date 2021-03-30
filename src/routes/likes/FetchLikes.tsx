@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { PrimaryText } from '../../components/typography'
-import { PrimaryButton, SecondaryButton } from '../../components/Button'
+import { PrimaryButton } from '../../components/Button'
 import { fetchLikes } from '../../api/likes'
 import to from 'await-to-js'
 import styled from 'styled-components/macro'
