@@ -6,6 +6,7 @@ import { DataContext } from '../DataContext/context'
 import { H3 } from '../typography'
 import styled from 'styled-components/macro'
 import { PictureModalContext } from '../PictureModalContext/context'
+import LoadingPicture from './LoadingPicture'
 
 interface IProps {
   categoryId: number | undefined
@@ -93,14 +94,15 @@ export const PictureGrid: React.FC<IProps> = React.memo(({ categoryId }) => {
       <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1150: 4, 1400: 5 }}>
         <Masonry gutter="10px">
           {pictures.map((picture, i) => (
-            <img
+            <LoadingPicture
               key={i}
               src={`${ASSETS_ENDPOINT}${picture.urls.small}`}
-              style={{ width: '100%', display: 'block', cursor: 'pointer' }}
+              blurHash={picture.blurHash}
+              pictureWidth={picture.width}
+              pictureHeight={picture.height}
               alt=""
               onClick={() => openPicture(picture)}
               onLoad={handleIncreaseImageAmount}
-              onError={handleIncreaseImageAmount}
             />
           ))}
         </Masonry>
