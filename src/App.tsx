@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { ThemeProvider } from 'styled-components'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { theme } from './theme/dark'
 import { GlobalStyle } from './layouts/GlobalStyle'
 import { DataContextProvider } from './components/DataContext'
 import { PictureModalContextProvider } from './components/PictureModalContext'
 import { Routes } from './routes'
+import { LikesContextProvider } from './components/LikesContext'
 
 function App() {
   return (
@@ -13,7 +16,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <DataContextProvider>
           <PictureModalContextProvider>
-            <Routes />
+            <LikesContextProvider>
+              <Routes />
+            </LikesContextProvider>
           </PictureModalContextProvider>
           {/*<CoreLayout>*/}
           {/*  <DefaultContent header="Trending images">*/}
@@ -21,6 +26,7 @@ function App() {
           {/*  </DefaultContent>*/}
           {/*</CoreLayout>*/}
         </DataContextProvider>
+        <ToastContainer />
       </ThemeProvider>
     </>
   )

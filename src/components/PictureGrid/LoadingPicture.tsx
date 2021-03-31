@@ -1,20 +1,50 @@
-import React, { DetailedHTMLProps, ImgHTMLAttributes, useState } from 'react'
+import React, { DetailedHTMLProps, ImgHTMLAttributes, useRef, useState } from 'react'
 import { Blurhash } from 'react-blurhash'
 import styled from 'styled-components'
+import { ReactComponent as HeartSvg } from 'src/assets/heart.svg'
+import { IPicture } from '../../api/pictures'
 
 interface IProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
   onLoad?: () => void
-  blurHash?: string
-  pictureWidth: number
-  pictureHeight: number
+  onLikeClick: (pictureId: number, isLiked: boolean) => Promise<boolean>
+  picture: IPicture
+  isLiked: boolean
 }
 
 const LoadingContainer = styled.div`
   width: 100%;
+  position: relative;
 `
 
-const LoadingPicture: React.FC<IProps> = ({ pictureHeight, pictureWidth, blurHash, onLoad, ...props }) => {
+const HeartIcon = styled.div`
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 28px;
+  height: 28px;
+`
+
+const LoadingPicture: React.FC<IProps> = ({
+  picture,
+  isLiked: isInitiallyLiked,
+  onLikeClick,
+  onLoad,
+  ...props
+}) => {
+  const { width, height, blurHash, id } = picture
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isLiked, setIsLiked] = useState(isInitiallyLiked)
+  const prevIsLiked = useRef<boolean>(isInitiallyLiked)
+
+  const handleLikeClick = async () => {
+    prevIsLiked.current = isLiked
+    setIsLiked(s => !s)
+
+    const isFinallyLiked = await onLikeClick(id, prevIsLiked.current)
+
+    // return to previous state if error happens
+    setIsLiked(s => (isFinallyLiked ? s : prevIsLiked.current))
+  }
 
   const handleLoaded = () => {
     setIsLoaded(true)
@@ -25,7 +55,7 @@ const LoadingPicture: React.FC<IProps> = ({ pictureHeight, pictureWidth, blurHas
   }
 
   // calculate coefficient based on picture's ratio
-  const ratio = pictureWidth / pictureHeight
+  const ratio = width / height
   let scaledHeight
   if (ratio > 2) {
     scaledHeight = ratio * 60
@@ -49,6 +79,9 @@ const LoadingPicture: React.FC<IProps> = ({ pictureHeight, pictureWidth, blurHas
           }}
           alt={props.alt}
         />
+        <HeartIcon onClick={handleLikeClick}>
+          <HeartSvg style={{ cursor: 'pointer', fill: isLiked ? 'red' : 'white' }} />
+        </HeartIcon>
       </LoadingContainer>
     )
   }

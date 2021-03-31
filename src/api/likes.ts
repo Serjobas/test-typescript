@@ -3,7 +3,7 @@ import { API_ENDPOINT } from './config'
 
 export const fetchLikes = () => {
   return axios.get<{
-    pictureIds: number[]
+    likedPictureIds: number[]
   }>(`${API_ENDPOINT}/likes`)
 }
 
