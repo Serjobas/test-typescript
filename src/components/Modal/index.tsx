@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/macro'
 import { useCallback, useEffect, useRef } from 'react'
+import { FadeIn } from '../FadeIn'
 
 const Backdrop = styled.div`
   position: fixed;
@@ -62,12 +63,14 @@ export const Modal: React.FC<IProps> = React.memo(({ children, onClose }) => {
 
   return (
     <>
-      <Backdrop onClick={handleBackdropClick} ref={backdropRef}>
-        <ModalContent>
-          <CloseButton onClick={onClose}>&times;</CloseButton>
-          {children}
-        </ModalContent>
-      </Backdrop>
+      <FadeIn duration={350} delay={100}>
+        <Backdrop onClick={handleBackdropClick} ref={backdropRef}>
+          <ModalContent>
+            <CloseButton onClick={onClose}>&times;</CloseButton>
+            {children}
+          </ModalContent>
+        </Backdrop>
+      </FadeIn>
     </>
   )
 })
