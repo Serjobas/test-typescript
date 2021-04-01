@@ -8,6 +8,9 @@ import { Link } from 'src/components/typography'
 import { DataContext } from '../components/DataContext/context'
 import { PicturePreviewModal } from './PicturePreviewModal'
 import _ from 'lodash'
+import { MyThemeContext } from '../components/MyThemeContext/context'
+import { DARK_THEME, WHITE_THEME } from '../components/MyThemeContext/constants'
+import { PrimaryButton } from '../components/Button'
 
 const leftPanelWidthPx = 265
 
@@ -42,6 +45,12 @@ const ProfileWrapper = styled.div`
   color: ${({ theme }) => theme.colors.white};
   font-size: 14px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+`
+
+const ThemeButtonWrapper = styled.div`
+  margin-right: 10px;
 `
 
 const MainWrapper = styled.div`
@@ -69,6 +78,11 @@ interface IProps {
 
 export const CoreLayout: React.FC<IProps> = ({ children, withCategoriesLeftMenu }) => {
   const { categories } = useContext(DataContext)
+  const { theme, updateTheme } = useContext(MyThemeContext)
+
+  const toggleTheme = () => {
+    updateTheme(theme === DARK_THEME ? WHITE_THEME : DARK_THEME)
+  }
 
   const [withSubCategories, withoutSubCategories] = categories
     ? _.partition(categories, category => category.categoryGroupName)
@@ -128,6 +142,11 @@ export const CoreLayout: React.FC<IProps> = ({ children, withCategoriesLeftMenu 
             <LinkTabs TabLinkComponent={TopMenuNavigationLink} tabs={topMenuItems} />
           </TopMenuWrapper>
           <ProfileWrapper>
+            <ThemeButtonWrapper>
+              <PrimaryButton size="m" onClick={toggleTheme}>
+                Switch to {theme === DARK_THEME ? 'White' : 'Dark'} theme
+              </PrimaryButton>
+            </ThemeButtonWrapper>
             <Link to="#">Test user</Link>
           </ProfileWrapper>
         </TopLineContainer>

@@ -17,7 +17,7 @@ const Backdrop = styled.div`
 const ModalContent = styled.div`
   width: 80%;
   height: 90%;
-  background-color: rgba(42, 38, 54, 1);
+  background-color: ${({ theme }) => theme.colors.modalBg};
   margin: auto;
   padding: 20px;
 `
