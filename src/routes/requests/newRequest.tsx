@@ -85,7 +85,7 @@ export const NewRequest: React.FC<RouteComponentProps> = React.memo(() => {
                       'Just one more to go',
                       'Hooray!',
                     ]}
-                    onChange={value => {
+                    onChange={(value: string) => {
                       form.setFieldValue('name', value)
                     }}
                   />
@@ -100,7 +100,7 @@ export const NewRequest: React.FC<RouteComponentProps> = React.memo(() => {
                     scaleMultiplier={2}
                     error={meta.error}
                     type="number"
-                    onChange={value => {
+                    onChange={(value: number) => {
                       form.setFieldValue('year', value)
                     }}
                   />
@@ -115,7 +115,7 @@ export const NewRequest: React.FC<RouteComponentProps> = React.memo(() => {
                     value={field.value}
                     scaleMultiplier={2}
                     error={meta.error}
-                    onChange={value => {
+                    onChange={(value: number) => {
                       form.setFieldValue('amountOfPictures', value)
                     }}
                   />

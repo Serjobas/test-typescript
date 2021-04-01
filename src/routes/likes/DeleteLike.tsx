@@ -49,8 +49,7 @@ export const DeleteLike: React.FC = () => {
           value={pictureId}
           label=""
           scaleMultiplier={3}
-          onChange={value => {
-            // @ts-ignore
+          onChange={(value: number) => {
             setPictureId(value)
           }}
           type="number"

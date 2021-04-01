@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { createLike } from '../../api/likes'
 import to from 'await-to-js'
 import styled from 'styled-components/macro'
-import { AxiosError } from "axios"
+import { AxiosError } from 'axios'
 
 const Pre = styled.pre`
   color: #fff;
@@ -49,11 +49,11 @@ export const CreateLike: React.FC = () => {
           value={pictureId}
           label=""
           scaleMultiplier={3}
-          onChange={value => {
-            // @ts-ignore
-            setPictureId(value)
-          }}
           type="number"
+          onChange={(newValue: number) => {
+            // ts bug, treats newValue as any. but in onChange it looks like it should (newValue: number) => void
+            setPictureId(newValue)
+          }}
         />
       </div>
       <ButtonWrapper>

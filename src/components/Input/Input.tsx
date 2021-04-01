@@ -164,15 +164,19 @@ const StylishInput: React.FC<IStylishInputProps & React.InputHTMLAttributes<HTML
   )
 }
 
-interface IProps {
-  value: string | number
+type IInputType = 'text' | 'number'
+
+type IGetInputTypeProps<T> = T extends 'text'
+  ? { value: string; onChange: (newValue: string) => void }
+  : { value: number; onChange: (newValue: number) => void }
+
+type Props<E extends IInputType> = {
+  type: E
   label: string
   error?: string
-  onChange: (newValue: string | number) => void
   scaleMultiplier?: number
   cheerfulTextMessages?: string[]
-  type: 'text' | 'number'
-}
+} & IGetInputTypeProps<E>
 
 const InputContainer = styled.div<{ scaleMultiplier?: number }>`
   display: flex;
@@ -185,15 +189,17 @@ const InputContainer = styled.div<{ scaleMultiplier?: number }>`
   }
 `
 
-export const CustomInput = ({
+export const CustomInput = <T extends IInputType>({
   value,
   label,
   error,
-  onChange,
   type,
   cheerfulTextMessages,
   ...props
-}: IProps) => {
+}: Props<T>): ReturnType<React.FC<Props<T>>> => {
+  // ts treats onChange like (newValue: never) => void
+  const onChange = props.onChange as (newValue: number | string) => void
+
   const message = cheerfulTextMessages
     ? cheerfulTextMessages[Math.min(value.toString().length, cheerfulTextMessages.length - 1)]
     : undefined
@@ -237,9 +243,9 @@ export const CustomInput = ({
         value={value}
         hintMessage={message}
         errorMessage={error}
-        onChange={handleChange}
         setRef={handleSetRef}
         {...props}
+        onChange={handleChange}
       />
       <TextButton icon={<CloseIcon />} type="button" onClick={handleClear} />
     </InputContainer>
